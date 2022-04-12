@@ -22,6 +22,12 @@ export default new Vuex.Store({
     setUser(state, user) {
       Vue.set(state, 'user', {...user})
     },
+    setUserProperty(state, {property, value}) {
+      Vue.set(state.user, property, value)
+    },
+    updateUsers(state, {user, index}) {
+      state.users[index] = user
+    }
   },
   actions: {
     fetchUsers({commit}) {
@@ -33,13 +39,21 @@ export default new Vuex.Store({
     deleteUser({commit}, index) {
       commit('removeUser', index)
     },
-    fetchUser({getters, commit},id) {
+    fetchUser({getters, commit}, id) {
       let user = getters.getUsers.find((user) => {
         if (user.id == id) {
           return user
         }
       })
       commit('setUser', user)
+    },
+    updateUser({getters, commit}) {
+      let user_index = getters.getUsers.findIndex((user) => {
+        if(user.id == getters.getUser.id) {
+          return user
+        }
+      })
+      commit('updateUsers', {user: getters.getUser, index: user_index})
     }
   },
   getters: {
