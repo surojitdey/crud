@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "Surojit",
+    "surname": "Dey",
+    "email": "deysurojit8@gmail.com",
+    "phone_number": "8638076228",
+    "activate": true
+  },
+  {
+    "id": 2,
+    "name": "Goutam",
+    "surname": "Das",
+    "email": "goutam@gmail.com",
+    "phone_number": "8134898031",
+    "activate": true
+  }
+]
