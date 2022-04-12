@@ -116,9 +116,7 @@
       ]),
       deleteAction(index) {
         this.deleteUser(index).then(() => {
-          console.log('deleted')
           this.wantToDelete = false
-          console.log('users', this.users)
         })
       },
       confirmDelete(index) {

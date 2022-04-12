@@ -63,7 +63,6 @@ export default {
         this.fetchUser(this.user_id).then(() => {
           this.userUpdated = true
         })
-        console.log('user saved')
       })
     }
   },
