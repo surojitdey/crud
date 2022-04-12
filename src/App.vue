@@ -2,6 +2,7 @@
   <v-app>
     <v-main>
       <Navbar></Navbar>
+      <v-divider></v-divider>
       <router-view/>
     </v-main>
   </v-app>

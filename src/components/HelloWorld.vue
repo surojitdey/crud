@@ -1,151 +1,136 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
-    </v-row>
+  <v-container fluid>
+    <div class="grey--text ml-2">
+      <v-row no-gutters justify="space-between" align="center">
+        <v-col cols="2" class="d-flex justify-start">
+          <v-toolbar-title class="primary--text">Home</v-toolbar-title>
+          <v-toolbar-title class="mx-2">/</v-toolbar-title>
+          <v-toolbar-title>Users</v-toolbar-title>
+        </v-col>
+        <v-col cols="2" class="d-flex justify-end align-center">
+          <v-toolbar-title>
+            <v-icon color="grey">mdi-chart-timeline-variant</v-icon>
+            Dashboard
+          </v-toolbar-title>
+        </v-col>
+      </v-row>
+    </div>
+    <v-card class="mt-2 px-6 d-flex align-center" width="100%" min-height="83vh" flat rounded="0" elevation="0" color="#ebedef">
+      <v-container fluid>
+        <v-card height="70vh" rounded="0" flat width="100%" color="white">
+          <v-row class="pa-4" no-gutters align="center" justify="space-between">
+            <span>Users</span>
+            <v-btn color="primary" @click="userCreate=true">Create User</v-btn>
+          </v-row>
+          <v-divider></v-divider>
+          <v-row no-gutters class="pa-4">
+            <v-col cols="3" class="pr-2">
+              <v-text-field
+                label="Text"
+                outlined
+                dense
+                hint="Search by name, surname, email, username, company or phone number"
+                persistent-hint
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3" class="pl-2">
+              <v-select
+                label="Select Status"
+                dense
+                outlined
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-divider class="mx-4"></v-divider>
+          <v-simple-table class="pa-4">
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-subtitle-1 font-weight-bold text-center">Name</th>
+                  <th class="text-subtitle-1 font-weight-bold text-center">Surname</th>
+                  <th class="text-subtitle-1 font-weight-bold text-center">Email</th>
+                  <th class="text-subtitle-1 font-weight-bold text-center">Phone Number</th>
+                  <th class="text-subtitle-1 font-weight-bold text-center">Activate</th>
+                  <th class="text-subtitle-1 font-weight-bold text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(user, index) in users" :key="index">
+                  <td class="text-center">{{user.name}}</td>
+                  <td class="text-center">{{user.surname}}</td>
+                  <td class="text-center">{{user.email}}</td>
+                  <td class="text-center">{{user.phone_number}}</td>
+                  <td class="text-center">{{user.activate}}</td>
+                  <td class="d-flex justify-center align-center">
+                    <v-btn small color="grey" class="white--text mr-2" @click="editUser(user.id)">Edit</v-btn>
+                    <v-btn class="ml-2" small color="error" @click="confirmDelete(index)">Delete</v-btn>
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </v-card>
+      </v-container>
+    </v-card>
+    <v-dialog v-model="userCreate" width="400">
+      <CreateUser :users="users" @user-created="userCreate=false"></CreateUser>
+    </v-dialog>
+    <v-dialog v-model="wantToDelete" width="400">
+      <v-card>
+        <v-card-text>Do you want delete this user?</v-card-text>
+        <v-card-actions>
+          <v-btn @click="deleteAction(selectedUser)" color="green">yes</v-btn>
+          <v-btn @click="wantToDelete=false" color="error">no</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
+  import {
+    mapGetters,
+    mapActions
+  } from 'vuex'
+  import CreateUser from '@/components/createUser.vue'
   export default {
     name: 'HelloWorld',
-
+    components: {
+      CreateUser
+    },
     data: () => ({
-      ecosystem: [
-        {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader',
-        },
-        {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify',
-        },
-        {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify',
-        },
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com',
-        },
-        {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com',
-        },
-        {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuejs.com/vuetify',
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs',
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify',
-        },
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer',
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/getting-started/pre-made-layouts',
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-        },
-      ],
+      userCreate: false,
+      wantToDelete: false,
+      selectedUser: null
     }),
+    computed: {
+      ...mapGetters({
+        users: 'getUsers'
+      })
+    },
+    methods: {
+      ...mapActions([
+        'fetchUsers',
+        'deleteUser',
+        'fetchUser'
+      ]),
+      deleteAction(index) {
+        this.deleteUser(index).then(() => {
+          console.log('deleted')
+          this.wantToDelete = false
+          console.log('users', this.users)
+        })
+      },
+      confirmDelete(index) {
+        this.selectedUser = index
+        this.wantToDelete = true
+      },
+      editUser(id) {
+        this.$router.push(`/edit-user/${id}`)
+      }
+    },
+    mounted() {
+      this.fetchUsers()
+    }
   }
 </script>
